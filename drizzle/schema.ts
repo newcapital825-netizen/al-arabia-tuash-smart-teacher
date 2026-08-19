@@ -17,6 +17,9 @@ export const licenses = mysqlTable("licenses", {
   accessKey: varchar("accessKey", { length: 128 }).notNull().unique(),
   status: mysqlEnum("status", ["available", "active", "disabled"]).default("available").notNull(),
   isInternalTest: boolean("isInternalTest").default(false).notNull(),
+  plan: mysqlEnum("plan", ["free_trial", "limited", "open"]).default("limited").notNull(),
+  usageLimit: int("usageLimit").default(60).notNull(),
+  usageUsed: int("usageUsed").default(0).notNull(),
   boundUserId: int("boundUserId"),
   boundEmail: varchar("boundEmail", { length: 320 }),
   boundDeviceHash: varchar("boundDeviceHash", { length: 128 }),
@@ -43,6 +46,8 @@ export const documents = mysqlTable("documents", {
   storageKey: varchar("storageKey", { length: 512 }).notNull(),
   analysisKey: varchar("analysisKey", { length: 512 }),
   pageCount: int("pageCount"),
+  expiresAt: timestamp("expiresAt"),
+  documentStatus: mysqlEnum("documentStatus", ["active", "failed", "expired"]).default("active").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

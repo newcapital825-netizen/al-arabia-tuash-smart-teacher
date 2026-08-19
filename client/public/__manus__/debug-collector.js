@@ -35,6 +35,14 @@
       "authorization",
       "cookie",
       "session",
+      "authorization",
+      "cookie",
+      "body",
+      "base64",
+      "source",
+      "summary",
+      "question",
+      "answer",
     ],
     maxBodyLength: 10240,
     // UI event logging privacy policy:
@@ -452,6 +460,10 @@
 
   var originalFetch = window.fetch.bind(window);
 
+  function shouldRedactNetworkBody(url) {
+    return /\/api\/trpc\/documents\.(upload|ask)/.test(String(url)) || /\/api\/trpc\/license\./.test(String(url));
+  }
+
   window.fetch = function (input, init) {
     init = init || {};
     var startTime = Date.now();
@@ -482,8 +494,8 @@
       method: method.toUpperCase(),
       url: url,
       request: {
-        headers: requestHeaders,
-        body: init.body ? sanitizeValue(tryParseJson(init.body)) : null,
+        headers: sanitizeValue(requestHeaders),
+        body: init.body ? (shouldRedactNetworkBody(url) ? "[REDACTED_SENSITIVE_REQUEST_BODY]" : sanitizeValue(tryParseJson(init.body))) : null,
       },
       response: null,
       duration: null,
@@ -500,7 +512,7 @@
         entry.response = {
           status: response.status,
           statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
+          headers: sanitizeValue(Object.fromEntries(response.headers.entries())),
           body: null,
         };
 
@@ -513,6 +525,13 @@
             status: response.status,
             statusText: response.statusText,
           });
+        }
+
+        if (shouldRedactNetworkBody(url)) {
+          entry.response.body = "[REDACTED_SENSITIVE_RESPONSE_BODY]";
+          store.networkRequests.push(entry);
+          pruneBuffer(store.networkRequests, CONFIG.bufferSize.network);
+          return response;
         }
 
         // Skip body capture for streaming responses (SSE, etc.) to avoid memory leaks

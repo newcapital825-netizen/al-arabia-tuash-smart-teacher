@@ -14,3 +14,8 @@ describe("grounded answer policy", () => {
     expect(validateGroundedAnswer("إجابة بلا دليل [الموضع: الفقرة 1]", citations)).toBe(OUT_OF_SCOPE);
   });
 });
+
+it("fails clearly when analysis exceeds its timeout", async () => {
+  const { withTimeout } = await import("./routers");
+  await expect(withTimeout(new Promise<string>(() => {}), 5, "انتهت مهلة التحليل")).rejects.toThrow("انتهت مهلة التحليل");
+});

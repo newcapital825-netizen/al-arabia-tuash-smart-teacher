@@ -1,0 +1,1 @@
+ALTER TABLE `documents` ADD `documentStatus` enum('active','failed','expired') DEFAULT 'active' NOT NULL;
