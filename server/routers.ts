@@ -65,6 +65,14 @@ export const appRouter = router({
     }),
   }),
   documents: router({
+    access: protectedProcedure.input(z.object({ documentId: z.number().int().positive(), deviceHash: deviceSchema })).query(async ({ ctx, input }) => {
+      const active = await getActiveLicenseForUser(ctx.user.id);
+      if (!active || (active.boundDeviceHash && active.boundDeviceHash !== input.deviceHash)) throw new TRPCError({ code: "FORBIDDEN", message: "هذا الجهاز غير مرتبط بالترخيص." });
+      const doc = await getDocument(input.documentId, ctx.user.id);
+      if (!doc || !doc.analysisKey) throw new TRPCError({ code: "NOT_FOUND", message: "الملف غير متاح أو انتهت مدة الاحتفاظ به." });
+      const [fileUrl, analysisUrl] = await Promise.all([storageGetSignedUrl(doc.storageKey), storageGetSignedUrl(doc.analysisKey)]);
+      return { id: doc.id, filename: doc.filename, mimeType: doc.mimeType, fileUrl, analysisUrl, expiresAt: doc.expiresAt };
+    }),
     upload: protectedProcedure.input(z.object({ filename: z.string().min(1).max(255), mimeType: z.string().min(1), base64: z.string().min(1), deviceHash: deviceSchema })).mutation(async ({ ctx, input }) => {
       const active = await getActiveLicenseForUser(ctx.user.id);
       if (!active) throw new TRPCError({ code: "FORBIDDEN", message: "فعّل ترخيصك أولًا." });

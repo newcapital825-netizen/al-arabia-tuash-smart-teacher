@@ -5,11 +5,11 @@ const dbMocks = vi.hoisted(() => ({
 }));
 vi.mock("./db", () => dbMocks);
 vi.mock("./_core/notification", () => ({ notifyOwner: vi.fn().mockResolvedValue(true) }));
-vi.mock("./storage", () => ({ storagePut: vi.fn().mockResolvedValue({ key: "k", url: "/manus-storage/k" }), storageGetSignedUrl: vi.fn() }));
+vi.mock("./storage", () => ({ storagePut: vi.fn().mockResolvedValue({ key: "k", url: "/manus-storage/k" }), storageGetSignedUrl: vi.fn().mockResolvedValue("https://signed.example/file") }));
 vi.mock("./_core/llm", () => ({ invokeLLM: vi.fn() }));
 
 import { appRouter } from "./routers";
-import { storagePut } from "./storage";
+import { storageGetSignedUrl, storagePut } from "./storage";
 import type { TrpcContext } from "./_core/context";
 
 function context(role: "user" | "admin" = "user"): TrpcContext { return { user: { id: 9, openId: "integration", name: "User", email: "user@example.com", loginMethod: "test", role, createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() }, req: { protocol: "https", headers: {} } as TrpcContext["req"], res: {} as TrpcContext["res"] }; }
@@ -30,6 +30,11 @@ describe("license and owner tRPC flows", () => {
   it("rejects a different account through license.activate", async () => {
     dbMocks.getLicense.mockResolvedValueOnce({ id: 1, accessKey: "KEY-1", status: "active", boundUserId: 4, boundEmail: "other@example.com", boundDeviceHash: deviceHash });
     await expect(appRouter.createCaller(context()).license.activate({ accessKey: "key-1", deviceHash, termsAccepted: true })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+  it("restores a saved document through a signed access route", async () => {
+    dbMocks.getActiveLicenseForUser.mockResolvedValue(activeLicense); dbMocks.getDocument.mockResolvedValueOnce({ id: 44, userId: 9, filename: "درس.pdf", mimeType: "application/pdf", storageKey: "student-files/9/abc.pdf", analysisKey: "student-analysis/9/44.json", expiresAt: new Date(Date.now() + 86400000), documentStatus: "active" });
+    const startedAt = performance.now(); const result = await appRouter.createCaller(context()).documents.access({ documentId: 44, deviceHash }); const elapsedMs = performance.now() - startedAt;
+    expect(elapsedMs).toBeLessThan(250); expect(result.filename).toBe("درس.pdf"); expect(result.fileUrl).toContain("https://signed.example"); expect(storageGetSignedUrl).toHaveBeenCalledTimes(2);
   });
   it("blocks upload when there is no active license", async () => {
     await expect(appRouter.createCaller(context()).documents.upload({ filename: "a.txt", mimeType: "text/plain", base64: "data:text/plain;base64,YQ==", deviceHash })).rejects.toMatchObject({ code: "FORBIDDEN" });
