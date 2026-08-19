@@ -1,17 +1,7 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
 
-/**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
- */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -22,7 +12,48 @@ export const users = mysqlTable("users", {
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
 });
 
+export const licenses = mysqlTable("licenses", {
+  id: int("id").autoincrement().primaryKey(),
+  accessKey: varchar("accessKey", { length: 128 }).notNull().unique(),
+  status: mysqlEnum("status", ["available", "active", "disabled"]).default("available").notNull(),
+  boundUserId: int("boundUserId"),
+  boundEmail: varchar("boundEmail", { length: 320 }),
+  boundDeviceHash: varchar("boundDeviceHash", { length: 128 }),
+  activatedAt: timestamp("activatedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const licenseAttempts = mysqlTable("licenseAttempts", {
+  id: int("id").autoincrement().primaryKey(),
+  accessKey: varchar("accessKey", { length: 128 }).notNull(),
+  userId: int("userId"),
+  email: varchar("email", { length: 320 }),
+  deviceHash: varchar("deviceHash", { length: 128 }),
+  outcome: mysqlEnum("outcome", ["success", "rejected", "disabled", "not_found"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const documents = mysqlTable("documents", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  filename: varchar("filename", { length: 255 }).notNull(),
+  mimeType: varchar("mimeType", { length: 120 }).notNull(),
+  storageKey: varchar("storageKey", { length: 512 }).notNull(),
+  analysisKey: varchar("analysisKey", { length: 512 }),
+  pageCount: int("pageCount"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const usageEvents = mysqlTable("usageEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  documentId: int("documentId"),
+  eventType: mysqlEnum("eventType", ["upload", "summary", "question"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
-
-// TODO: Add your tables here
+export type License = typeof licenses.$inferSelect;
+export type Document = typeof documents.$inferSelect;
