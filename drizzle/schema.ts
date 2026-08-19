@@ -16,6 +16,7 @@ export const licenses = mysqlTable("licenses", {
   id: int("id").autoincrement().primaryKey(),
   accessKey: varchar("accessKey", { length: 128 }).notNull().unique(),
   status: mysqlEnum("status", ["available", "active", "disabled"]).default("available").notNull(),
+  isInternalTest: boolean("isInternalTest").default(false).notNull(),
   boundUserId: int("boundUserId"),
   boundEmail: varchar("boundEmail", { length: 320 }),
   boundDeviceHash: varchar("boundDeviceHash", { length: 128 }),

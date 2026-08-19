@@ -13,6 +13,7 @@ import { evaluateLicense } from "./policy";
 import { bindLicense, createLicense, getDocument, getLicense, listLicenses, ownerStats, recordAttempt, recordUsage, saveDocument, setLicenseStatus, updateDocument } from "./db";
 
 export const OUT_OF_SCOPE = "هذا السؤال غير موجود ضمن محتوى الملف المرفوع. راجع معلّمك أو مصدرًا آخر معتمدًا.";
+export const INTERNAL_TEST_KEY = "ARABIA-INTERNAL-TEST-2026";
 const deviceSchema = z.string().min(8).max(128);
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => { if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "هذه الصفحة مخصصة للمالك فقط." }); return next(); });
 
@@ -50,7 +51,7 @@ export const appRouter = router({
       }
       if (decision === "bind") await bindLicense(license.id, ctx.user.id, ctx.user.email, input.deviceHash);
       await recordAttempt({ accessKey: key, userId: ctx.user.id, email: ctx.user.email, deviceHash: input.deviceHash, outcome: "success" });
-      return { success: true } as const;
+      return { success: true, isInternalTest: Boolean((license as any).isInternalTest), notice: (license as any).isInternalTest ? "هذا المفتاح مخصص للاختبار الداخلي فقط وليس للبيع أو التوزيع." : undefined } as const;
     }),
   }),
   documents: router({
@@ -88,7 +89,7 @@ ${source.slice(0, 120000)}
   owner: router({
     stats: adminProcedure.query(() => ownerStats()),
     licenses: adminProcedure.query(() => listLicenses()),
-    createLicense: adminProcedure.input(z.object({ accessKey: z.string().trim().min(8).max(128) })).mutation(async ({ input }) => { await createLicense(input.accessKey.toUpperCase()); return { success: true }; }),
+    createLicense: adminProcedure.input(z.object({ accessKey: z.string().trim().min(8).max(128) })).mutation(async ({ input }) => { const key = input.accessKey.toUpperCase(); if (key === INTERNAL_TEST_KEY) throw new TRPCError({ code: "BAD_REQUEST", message: "هذا المفتاح محجوز للاختبار الداخلي ولا يمكن إصداره كترخيص تجاري." }); await createLicense(key); return { success: true }; }),
     setLicenseStatus: adminProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["available", "active", "disabled"]) })).mutation(async ({ input }) => { await setLicenseStatus(input.id, input.status); return { success: true }; }),
   }),
 });

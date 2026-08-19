@@ -1,0 +1,1 @@
+ALTER TABLE `licenses` ADD `isInternalTest` boolean DEFAULT false NOT NULL;

@@ -15,9 +15,9 @@ function context(role: "user" | "admin" = "user"): TrpcContext { return { user: 
 
 describe("license and owner tRPC flows", () => {
   it("binds an available license through license.activate", async () => {
-    dbMocks.getLicense.mockResolvedValueOnce({ id: 1, accessKey: "KEY-1", status: "available", boundUserId: null, boundEmail: null });
-    const result = await appRouter.createCaller(context()).license.activate({ accessKey: "key-1", deviceHash: "device-12345678", termsAccepted: true });
-    expect(result.success).toBe(true); expect(dbMocks.bindLicense).toHaveBeenCalledWith(1, 9, "user@example.com", "device-12345678");
+    dbMocks.getLicense.mockResolvedValueOnce({ id: 1, accessKey: "ARABIA-INTERNAL-TEST-2026", status: "available", isInternalTest: true, boundUserId: null, boundEmail: null });
+    const result = await appRouter.createCaller(context()).license.activate({ accessKey: "ARABIA-INTERNAL-TEST-2026", deviceHash: "device-12345678", termsAccepted: true });
+    expect(result.success).toBe(true); expect(result.isInternalTest).toBe(true); expect(result.notice).toContain("للاختبار الداخلي فقط"); expect(dbMocks.bindLicense).toHaveBeenCalledWith(1, 9, "user@example.com", "device-12345678");
   });
   it("rejects a different account through license.activate", async () => {
     dbMocks.getLicense.mockResolvedValueOnce({ id: 1, accessKey: "KEY-1", status: "active", boundUserId: 4, boundEmail: "other@example.com" });
@@ -44,6 +44,9 @@ describe("license and owner tRPC flows", () => {
     await expect(appRouter.createCaller(context()).documents.upload({ filename: "a.exe", mimeType: "application/x-msdownload", base64: "data:application/x-msdownload;base64,YQ==" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
     const huge = `data:text/plain;base64,${Buffer.alloc(21 * 1024 * 1024, 97).toString("base64")}`;
     await expect(appRouter.createCaller(context()).documents.upload({ filename: "huge.txt", mimeType: "text/plain", base64: huge })).rejects.toMatchObject({ code: "PAYLOAD_TOO_LARGE" });
+  });
+  it("rejects the reserved internal key from commercial issuance", async () => {
+    await expect(appRouter.createCaller(context("admin")).owner.createLicense({ accessKey: "ARABIA-INTERNAL-TEST-2026" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
   it("allows owner license listing and mutating routes for admins", async () => {
     dbMocks.listLicenses.mockResolvedValueOnce([{ id: 1, accessKey: "KEY-1", status: "available" }]);
