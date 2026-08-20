@@ -257,12 +257,22 @@
 
 - [x] إنشاء/استخدام فرع `feature/gate-1a-real-document-validation` دون تعديل main
 - [x] جرد العينات الحقيقية المتاحة محليًا حسب النوع دون قراءة محتوى حساس في السجل
-- [ ] تشغيل ingestion/extraction/OCR/canonical على العينات الحقيقية المتاحة فقط
+- [x] تشغيل ingestion/extraction/OCR/canonical على العينات الحقيقية المتاحة فقط
 - [x] إنشاء Corpus Manifest ببيانات metadata غير حساسة وhashes اختيارية فقط
-- [ ] اختبار Original Text مقابل Normalized Text وسلامة التطبيع العربي
-- [ ] اختبار Evidence ID Reconstruction من البداية والمنتصف والنهاية عند توفر الموضع
-- [ ] اختبار Location Integrity وDuplicate/Stability على تشغيلين مستقلين
+- [x] اختبار Original Text مقابل Normalized Text وسلامة التطبيع العربي
+- [x] اختبار Evidence ID Reconstruction من البداية والمنتصف والنهاية عند توفر الموضع
+- [x] اختبار Location Integrity وDuplicate/Stability على تشغيلين مستقلين
 - [x] اختبار Empty/Corrupted/Unsupported/Low-quality/No-text inputs مع فشل آمن
 - [x] تشغيل TypeScript وTests وBuild بعد أي تعديل ضروري فقط
 - [x] إعداد `GATE 1A REPORT — REAL DOCUMENT GAUNTLET` وتصنيف كل مسار
-- [ ] حفظ التقرير في فرع الاختبار وعدم Push إلى main أو بدء Gate لاحق
+- [x] حفظ التقرير في فرع الاختبار وعدم Push إلى main أو بدء Gate لاحق
+
+## Gate 1A — Attached Arabic PDF Sample
+
+- [x] تسجيل metadata غير حساس للعينة المرفقة وحساب hash محلي فقط
+- [x] تشغيل PDF extraction الحقيقي دون تسجيل النص الخام
+- [x] قياس page count وcanonical blocks وEvidence IDs وlocations
+- [x] إعادة بناء أدلة من بداية/وسط/نهاية صفحات مختلفة دون كشف الاقتباس
+- [x] تشغيل extraction مرتين ومقارنة stability وdocument/evidence IDs
+- [x] تحديث Manifest وGATE_1A_REPORT بتصنيف العينة والنتائج
+- [ ] حفظ الاختبار على feature branch فقط وعدم Push إلى main أو بدء Gate لاحق

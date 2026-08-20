@@ -4,11 +4,11 @@
 
 ### **GATE 1A PARTIAL — SPECIFIC GAPS REMAIN**
 
-لم تتوفر في بيئة الاختبار عينة عربية حقيقية من PDF نصي أو PDF مصوّر أو DOCX أو صورة. لذلك لم أعتبر أيًا من هذه الأنواع **PASS** اعتمادًا على unit tests أو fixtures أو توقع نظري. تم تنفيذ فحص corpus، وأُنشئ Manifest metadata-only، واختُبرت المدخلات السلبية، وأُضيف إصلاح دفاعي صغير يمنع تمرير MIME غير مدعوم أو نص مستخرج فارغ إلى التحليل. لكن إثبات `REAL SAMPLE → REAL PIPELINE → REAL OUTPUT → REAL RECONSTRUCTION` ما زال محجوبًا حتى توفير عينات تشغيلية حقيقية آمنة.
+تم اختبار عينة PDF عربية حقيقية مرفقة من المستخدم دون نسخها إلى GitHub أو حفظ نصها. العينة حجمها 9,498,045 بايت، وmetadata يذكر 15 صفحة ولا توجد خطوط مضمّنة. أظهر PDF text extraction ناتجًا قصيرًا من 261 وحدة نصية، لكن عدد المحارف العربية كان صفرًا، وبنى الكود Canonical من صفحة واحدة و15 Evidence فقط؛ لذلك لا يمكن اعتبار الناتج تمثيلًا صالحًا لمحتوى الامتحان. أُنشئ Manifest metadata-only، واختُبرت الثبات وإعادة البناء الداخلية، وسُجلت الفجوة بدل تمرير النص وكأنه صحيح. ما زالت عينات DOCX والصورة وPDF عربي نصي مستقل مطلوبة.
 
 ## A — Samples Available
 
-لم تتوفر عينات PDF أو DOCX أو صور عربية حقيقية محليًا في مجلد الرفع أو المشروع أو المسارات المناسبة في مجلد المستخدم. وُجد ملف `/home/ubuntu/audit_source_ar.txt`، لكنه يحمل بنية وعبارات اختبارية صريحة مثل «ملاحظة الاختبار» و«جدول الاختبار»، لذلك صُنّف **EXCLUDED — SYNTHETIC TEST SHEET** ولم يُستخدم لإثبات Gate 1A.
+العينة المتاحة فعليًا هي PDF المرفق: 15 صفحة، 9,498,045 بايت، SHA-256 موثق في Manifest فقط، ولا توجد خطوط مضمّنة حسب metadata. وُجد أيضًا ملف `/home/ubuntu/audit_source_ar.txt`، لكنه يحمل بنية وعبارات اختبارية صريحة مثل «ملاحظة الاختبار» و«جدول الاختبار»، لذلك صُنّف **EXCLUDED — SYNTHETIC TEST SHEET** ولم يُستخدم لإثبات Gate 1A.
 
 تم إنشاء `GATE_1A_CORPUS_MANIFEST.md` ويحتوي على metadata فقط، دون نسخ نصوص أو صور إلى GitHub.
 
@@ -16,42 +16,42 @@
 
 | Type | Status | Reason |
 |---|---|---|
-| PDF عربي نصي | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
-| PDF عربي مصوّر/Scanned | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
+| PDF عربي نصي | **BLOCKED — REAL SAMPLE REQUIRED** | لم تتوفر عينة مستقلة ذات طبقة نص عربية موثوقة |
+| PDF عربي مصوّر/Scanned | **FAIL** | العينة موجودة لكن extraction أعاد 261 وحدة بلا محارف عربية، وOCR لم يُشغّل |
 | DOCX عربي | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
 | Image عربي | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
 
 ## C — Ingestion
 
-**BLOCKED** للأنواع الأربعة المطلوبة لغياب العينات الحقيقية. مسارات MIME موجودة في التطبيق، لكن وجود المسار البرمجي لا يساوي اختبارًا فعليًا.
+**PARTIAL.** نجحت قراءة ملف PDF المرفق وحساب metadata، لكن تمثيل parser الناتج احتوى صفحة واحدة فقط مقابل 15 صفحة فعلية؛ DOCX والصورة وPDF النصي المستقل ما زالت BLOCKED.
 
 ## D — Extraction
 
-**BLOCKED** كإثبات Gate 1A على PDF/DOCX حقيقي. أُجري فحص سلبي على PDF تالف، وفشل باستثناء parser واضح بدل إنتاج Evidence وهمي. لم تُحسب هذه النتيجة PASS لنوع PDF العربي.
+**FAIL على العينة المرفقة.** أُجري extraction فعلي مرتين، وأعاد 261 وحدة نصية بلا محارف عربية، مع Canonical من صفحة واحدة فقط. metadata الفعلي يذكر 15 صفحة ولا توجد خطوط مضمّنة. أُجري فحص سلبي على PDF تالف وفشل باستثناء parser واضح بدل إنتاج Evidence وهمي.
 
 ## E — OCR
 
-**BLOCKED** لغياب PDF مصوّر وصورة عربية حقيقية. مسار OCR العربي موجود في التطبيق، لكن لم يُسمح بادعاء نجاحه دون صورة أو PDF مصوّر فعلي.
+**FAIL على PDF المرفق.** العينة تبدو PDF مصوّرًا/بدون خطوط مضمّنة، لكن مسار upload الحالي لم يشغّل OCR لـPDF؛ لذلك لم ينتج نصًا عربيًا موثوقًا. صورة عربية مستقلة ما زالت BLOCKED.
 
 ## F — Canonical Representation
 
-**PARTIAL.** النموذج Canonical موجود في `server/canonical.ts` ويربط Document/Page/Block/Evidence مع `Original Text` و`Normalized Text` و`Location Model`. اختبارات الوحدة السابقة نجحت، لكن لم يُثبت النموذج على عينة عربية حقيقية ضمن هذه الجولة.
+**PARTIAL.** النموذج Canonical اشتغل فعليًا على ناتج PDF، وأنتج Document/Page/Block/Evidence، لكن page count الناتج كان 1 بدل 15 والنص لم يحوِ محارف عربية؛ لذلك التمثيل قابل للتتبع داخليًا لكنه غير صالح كتمثيل للمصدر الحقيقي حتى يمر PDF المصوّر عبر OCR.
 
 ## G — Location Model
 
-**PARTIAL.** توجد مواقع صادقة للنصوص والمدخلات PDF التي توفر فواصل صفحات، وتوجد أنواع `pdf-page` و`docx-paragraph` و`text-range` و`image`. لم يمكن التحقق من مطابقة موقع حقيقي في PDF/DOCX/صورة عربية لغياب العينات.
+**FAIL على العينة المرفقة.** Evidence locations الداخلية تحمل `page: 1` فقط، بينما PDF metadata يذكر 15 صفحة. هذا تعارض مباشر يمنع اعتبار Location Mapping صالحًا للمصدر. أنواع المواقع الأخرى ما زالت غير مختبرة على DOCX وصورة حقيقية.
 
 ## H — Evidence IDs
 
-**PARTIAL.** Evidence IDs deterministic في النموذج الحالي، وتوجد اختبارات إعادة البناء السابقة. لا توجد Evidence IDs من عينات عربية حقيقية يمكن عرضها بأمان في هذا التقرير.
+**PARTIAL.** Evidence IDs كانت deterministic وثابتة في التشغيلين، وأعيد بناء عينات البداية والمنتصف والنهاية داخليًا بنجاح. لكنها مبنية على extraction ناقص من صفحة واحدة، لذلك لا تثبت أدلة المصدر الحقيقي متعدد الصفحات.
 
 ## I — Evidence Reconstruction
 
-**BLOCKED — REAL SAMPLE REQUIRED.** لم تُختبر أدلة من بداية ووسط ونهاية ملفات عربية حقيقية أو صفحات PDF متعددة. لا أضع IDs مصطنعة كبديل عن الاختبار المطلوب.
+**PARTIAL.** أُعيد بناء ثلاثة Evidence IDs من البداية والمنتصف والنهاية للـCanonical الناتج، وكلها أعادت نفس ID داخليًا. لكن لا يمكن ربطها بصفحات المصدر 2–15 لأن parser لم يبنِ تلك الصفحات؛ لذلك لم يثبت reconstruction الكامل للمصدر.
 
 ## J — Deterministic Stability
 
-**PARTIAL.** اختبارات canonical الحالية تغطي الاستقرار على مدخلات اختبارية، لكن duplicate extraction وتشابه Evidence IDs لم يُثبت على ملف عربي حقيقي مرتين. النتيجة النهائية لعينة حقيقية تبقى محجوبة.
+**PASS داخليًا / PARTIAL على Gate 1A.** تشغيل PDF مرتين أعاد نفس document hash والبنية وEvidence IDs. لكن الاستقرار يثبت تكرار النتيجة الناقصة نفسها، ولا يعالج فشل OCR أو تعارض page count.
 
 ## K — Error Handling
 
@@ -97,20 +97,20 @@
 
 ## Q — Remaining Gaps
 
-الفجوات المحددة هي: توفير PDF عربي نصي حقيقي، PDF عربي مصوّر حقيقي، DOCX عربي حقيقي، وصورة عربية حقيقية؛ تشغيل الخط الكامل على كل عينة؛ إعادة بناء Evidence IDs من البداية والوسط والنهاية؛ التحقق من Page/Paragraph/Image location مقابل المصدر الفعلي؛ تشغيل duplicate stability على ملفات حقيقية؛ والتحقق من OCR العربي على الهمزات والتشكيل والأرقام والاتجاه RTL.
+الفجوات المحددة هي: إضافة مسار OCR فعلي لـPDF المصوّر قبل Canonical؛ إصلاح page segmentation بحيث يطابق 15 صفحة فعلية؛ توفير PDF عربي نصي مستقل وDOCX عربي وصورة عربية؛ إعادة تشغيل reconstruction على صفحات متعددة بعد OCR؛ والتحقق من OCR العربي على الهمزات والتشكيل والأرقام والاتجاه RTL. لا يُعتبر PDF الحالي PASS؛ تصنيفه FAIL للاستخراج وOCR وLocation، مع ثبات داخلي فقط.
 
 ## Gate 1A Scorecard
 
 | Capability | PDF Text | PDF Scanned | DOCX | Image |
 |---|---|---|---|---|
-| Ingestion | BLOCKED | BLOCKED | BLOCKED | BLOCKED |
-| Extraction | BLOCKED | BLOCKED | BLOCKED | BLOCKED |
-| OCR | BLOCKED | BLOCKED | BLOCKED | BLOCKED |
-| Canonical Structure | PARTIAL | BLOCKED | BLOCKED | BLOCKED |
-| Location Mapping | PARTIAL | BLOCKED | BLOCKED | BLOCKED |
-| Evidence IDs | PARTIAL | BLOCKED | BLOCKED | BLOCKED |
-| Reconstruction | BLOCKED | BLOCKED | BLOCKED | BLOCKED |
-| Stability | PARTIAL | BLOCKED | BLOCKED | BLOCKED |
+| Ingestion | BLOCKED | PASS | BLOCKED | BLOCKED |
+| Extraction | BLOCKED | FAIL | BLOCKED | BLOCKED |
+| OCR | BLOCKED | FAIL | BLOCKED | BLOCKED |
+| Canonical Structure | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
+| Location Mapping | PARTIAL | FAIL | BLOCKED | BLOCKED |
+| Evidence IDs | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
+| Reconstruction | BLOCKED | PARTIAL | BLOCKED | BLOCKED |
+| Stability | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
 | Error Handling | PARTIAL | PARTIAL | PARTIAL | PARTIAL |
 
 `PARTIAL` هنا تعني أن البنية أو اختبارًا سلبيًا تحقق، لا أن النوع اجتاز اختبار عينة حقيقية.
@@ -123,7 +123,7 @@
 | `server/routers.ts` | رفض OCR الفارغ قبل التلخيص | منع تمرير نتيجة OCR غير موثوقة |
 | `server/extract.gate1a.test.ts` | ثلاث اختبارات فشل آمن | تحويل فشل حقيقي إلى Regression tests دون محتوى مستخدم |
 | `GATE_1A_CORPUS_MANIFEST.md` | metadata-only corpus record | توثيق العينات المتاحة والمحجوبة دون محتوى |
-| `GATE_1A_REPORT.md` | هذا التقرير | توثيق Gate 1A والقرار والفجوات |
+| `GATE_1A_REPORT.md` | هذا التقرير | توثيق Gate 1A والقرار والفجوات ونتيجة PDF الحقيقي |
 
 ## Hard Stop
 
