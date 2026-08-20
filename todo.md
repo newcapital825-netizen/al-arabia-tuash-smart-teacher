@@ -169,10 +169,30 @@
 - [x] توثيق إثبات مسار Upload → Read → Delete → Verify Not Found وLifecycle لكل مزود
 - [x] اختيار مزود واحد فقط مع درجة ثقة واحتياجات الحساب والصلاحيات دون طلب أسرار
 - [x] إعداد Migration Plan للمزود المقترح دون تنفيذ أو تغيير كود أو اختبار ميداني
-- [ ] حفظ قرار P1.7 وتسليمه للمستخدم ثم التوقف قبل Migration
+- [x] حفظ قرار P1.7 وتسليمه للمستخدم ثم التوقف قبل Migration
 
 ## P1.7 Decision Constraints
 
 - [x] عدم إنشاء حسابات أو Buckets أو credentials
 - [x] عدم طلب أو استقبال كلمات مرور أو مفاتيح عبر المحادثة
 - [x] عدم تعديل الكود أو بدء Migration أو الاختبار الميداني
+
+## P1.8 — Cloudflare R2 Migration
+
+- [x] فحص جاهزية اعتمادات R2 دون طلب أسرار عبر المحادثة ودون كشفها
+- [x] توثيق حالة البيانات القديمة وعدم تنفيذ حذف أو destructive migration
+- [ ] إعداد تكامل R2 خاص وقابل للرجوع خلف adapter، إذا كانت ACCOUNT SETUP مكتملة
+- [ ] تنفيذ مسارات upload/read/delete والتحقق من غياب الكائن مع حذف التحليل والملفات المؤقتة
+- [ ] إعداد واختبار Lifecycle موثق بسياسة TEST RETENTION POLICY قابلة للتعديل
+- [ ] إضافة اختبارات R2 للرفع والاسم العربي والخصوصية والعزل والحذف والسجلات
+- [x] تشغيل جميع الاختبارات الحالية دون اختبار المتصفح الميداني أو multipart
+- [x] إعداد R2 Migration Regression Report بأقسام A–H وتصنيف Privacy/Storage/Blockers
+- [ ] حفظ التقرير والنسخة وتسليمها ثم التوقف قبل P2 والاختبار الميداني
+
+## P1.8 Decision Constraints
+
+- [x] عدم حذف أو نقل البيانات القديمة عشوائيًا
+- [x] عدم إنشاء حساب أو Bucket أو credentials إذا كانت ACCOUNT SETUP REQUIRED
+- [x] عدم طلب Secret Key أو Access Key عبر المحادثة
+- [x] عدم وضع أي credential في Client أو logs أو network responses
+- [x] عدم بدء اختبار المتصفح الميداني أو P2 أو تحسينات UI
