@@ -196,3 +196,17 @@
 - [x] عدم طلب Secret Key أو Access Key عبر المحادثة
 - [x] عدم وضع أي credential في Client أو logs أو network responses
 - [x] عدم بدء اختبار المتصفح الميداني أو P2 أو تحسينات UI
+
+## P2A — Educational AI Product Architecture v2
+
+- [x] إعداد Architecture Decision Record شامل للنسخة التجارية القوية دون تنفيذ
+- [x] تصميم Document Ingestion وArabic OCR وStructure Preservation وHierarchical Parsing
+- [x] تصميم Page/Section/Paragraph mapping وSemantic Indexing وHybrid Retrieval
+- [x] تصميم Evidence Verification وCitation Mapping وEvidence Threshold وAbstention
+- [x] تصميم Golden Dataset وBenchmark ومقاييس الجودة المطلوبة
+- [x] تصميم Usage Credits وUnit Economics دون تحديد أسعار نهائية غير موثقة
+- [x] تصميم Payment Abstraction Layer وWebhook Verification مع Gateway قابل للاستبدال
+- [x] تصميم Owner Quality Dashboard دون كشف محتوى ملفات الطلاب
+- [x] تحديد Gate 1 Infrastructure/Privacy وGate 2 Intelligence وGate 3 Field Acceptance وGate 4 Commercial Pilot
+- [x] توثيق المخاطر والحدود وخطة الرجوع وما يجب اختباره قبل Pilot
+- [x] حفظ ADR وتسليمه والتوقف دون تنفيذ R2 أو الدفع أو تحسينات UI
