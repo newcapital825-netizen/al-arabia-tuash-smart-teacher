@@ -294,4 +294,14 @@
 - [x] اختبار Canonical وLocation وEvidence Reconstruction للصورة والـPDF
 - [x] اختبار Repeatability للصيغتين وتصنيف PASS/PARTIAL/FAIL/BLOCKED
 - [x] تحديث Manifest وGATE 1A REPORT بالنتائج دون رفع الملفات أو النصوص إلى GitHub
-- [ ] حفظ الاختبار على feature branch والتوقف دون Gate لاحق أو OCR redesign
+- [x] حفظ الاختبار على feature branch والتوقف دون Gate لاحق أو OCR redesign
+
+## Gate 1A — Attached DOCX and Text PDF
+
+- [x] تسجيل metadata وhash للعينة DOCX وPDF دون حفظ المحتوى
+- [x] تشغيل DOCX extraction مرتين وقياس Arabic/RTL/headings/paragraphs/punctuation/order
+- [x] تشغيل PDF text extraction مرتين وقياس page count/page mapping/Arabic/blocks
+- [x] اختبار Canonical وLocation وEvidence Reconstruction للصيغتين
+- [x] اختبار stability وDuplicate/Evidence IDs عبر تشغيلين مستقلين
+- [x] تحديث Manifest وGate 1A Cross-Format Report دون رفع الملفات أو النصوص إلى GitHub
+- [ ] حفظ النتائج على feature branch والتوقف دون Gate لاحق أو إصلاح معماري
