@@ -210,3 +210,16 @@
 - [x] تحديد Gate 1 Infrastructure/Privacy وGate 2 Intelligence وGate 3 Field Acceptance وGate 4 Commercial Pilot
 - [x] توثيق المخاطر والحدود وخطة الرجوع وما يجب اختباره قبل Pilot
 - [x] حفظ ADR وتسليمه والتوقف دون تنفيذ R2 أو الدفع أو تحسينات UI
+
+## P2B — Gate 1 Trusted Data Foundation
+
+- [x] فحص مسار ingestion الحالي والعينات الحقيقية المتاحة للأنواع الخمسة
+- [x] تصميم وتنفيذ Canonical Document Representation: Document → Page → Section → Block → Evidence
+- [x] إضافة Location Model صادق وEvidence IDs deterministic/traceable/verifiable
+- [x] الحفاظ على Original Extracted Text وNormalized Text دون تغيير الأصل أو تسجيل المحتوى
+- [x] إضافة اختبارات إعادة بناء Evidence ID إلى الموقع والنص الأصلي
+- [ ] اختبار PDF عربي نصي وPDF عربي مصور وTXT عربي وDOCX عربي وصورة عربية، وتصنيف غير المتاح BLOCKED — REAL SAMPLE REQUIRED
+- [ ] اختبار الملفات الفارغة والتالفة وPDF غير القابل للاستخراج والصورة غير الواضحة وOCR غير الموثوق
+- [x] تشغيل الاختبارات الحالية والتحقق من عدم تراجع الخصوصية وعدم بدء Gate 2 أو RAG أو Payment أو Pilot أو UI redesign
+- [x] إعداد GATE 1 REPORT بالأقسام A–I وتحديد القرار والفجوات بدقة
+- [ ] حفظ التقرير وتسليمه والتوقف بعد Gate 1

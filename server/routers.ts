@@ -8,6 +8,7 @@ import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import { storageGetSignedUrl, storagePut } from "./storage";
 import { extractSource, makeCitations } from "./extract";
+import { buildCanonicalDocument } from "./canonical";
 import { validateGroundedAnswer } from "./grounded";
 import { evaluateLicense } from "./policy";
 import { bindLicense, consumeUsage, createLicense, getActiveLicenseForUser, getDocument, getLicense, listLicenses, ownerStats, purgeExpiredDocuments, rebindLicenseDevice, recordAttempt, recordUsage, refundUsage, saveDocument, setLicenseStatus, updateDocument, usageBalance } from "./db";
@@ -86,13 +87,13 @@ export const appRouter = router({
       const id = await saveDocument({ userId: ctx.user.id, filename: input.filename, mimeType: input.mimeType, storageKey: stored.key, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) });
       if (!(await consumeUsage(active.id))) { await updateDocument(id, { storageKey: "orphaned", analysisKey: null, documentStatus: "failed" }); throw new TRPCError({ code: "FORBIDDEN", message: "نفد رصيد المحاولات. تواصل مع المالك أو اختر خطة مناسبة." }); }
       await recordUsage({ userId: ctx.user.id, documentId: id, eventType: "upload" });
-      const extracted = input.mimeType.startsWith("image/") ? await (async () => { const text = await groundedVision("أنت OCR عربي. استخرج النص من الصورة فقط، بلا إضافة.", `data:${input.mimeType};base64,${bytes.toString("base64")}`); return { text, citations: makeCitations(text) }; })() : await extractSource(bytes, input.mimeType);
+      const extracted = input.mimeType.startsWith("image/") ? await (async () => { const text = await groundedVision("أنت OCR عربي. استخرج النص من الصورة فقط، بلا إضافة.", `data:${input.mimeType};base64,${bytes.toString("base64")}`); const canonical = buildCanonicalDocument(text, input.mimeType); return { text: canonical.originalText, normalizedText: canonical.normalizedText, citations: makeCitations(text, input.mimeType), canonical }; })() : await extractSource(bytes, input.mimeType);
       const raw = extracted.text || `الملف المرفوع اسمه ${input.filename}. لم يُستخرج منه نص قابل للقراءة.`;
       const citationGuide = extracted.citations.slice(0, 80).map((item) => `[${item.label}] ${item.quote}`).join("\n");
       let summary: string;
       try {
         summary = await withTimeout(groundedModel("أنت مساعد تعليمي عربي. لخّص محتوى المصدر فقط، واحفظ المصطلحات كما وردت، ولا تضف معلومة خارج المصدر. استخدم عناوين واضحة. أرفق في نهاية النقاط المهمة موضعًا مثل [الفقرة 2].", `المصدر الكامل:\n${raw.slice(0, 60000)}\n\nمواضع المصدر:\n${citationGuide}\n\nأعد ملخصًا موجزًا منظمًا بالعربية.`), 90_000, "انتهت مهلة التحليل");
-        const analysis = JSON.stringify({ source: raw, summary, citations: extracted.citations, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
+        const analysis = JSON.stringify({ source: raw, normalizedSource: extracted.normalizedText, summary, citations: extracted.citations, canonical: extracted.canonical, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
         const analysisStored = await withTimeout(storagePut(`student-analysis/${ctx.user.id}/${id}.json`, analysis, "application/json"), 15_000, "تعذر حفظ التحليل");
         await updateDocument(id, { analysisKey: analysisStored.key });
         await recordUsage({ userId: ctx.user.id, documentId: id, eventType: "summary" });
