@@ -305,3 +305,11 @@
 - [x] اختبار stability وDuplicate/Evidence IDs عبر تشغيلين مستقلين
 - [x] تحديث Manifest وGate 1A Cross-Format Report دون رفع الملفات أو النصوص إلى GitHub
 - [x] حفظ النتائج على feature branch والتوقف دون Gate لاحق أو إصلاح معماري
+
+## Gate 1A — Decision Package
+
+- [x] مراجعة الفجوات المتبقية وربطها بنتائج DOCX/PDF/Image الفعلية
+- [x] تحديد خيارات إصلاح PDF OCR وPage Mapping وImage OCR Stability مع مخاطر كل خيار
+- [x] تحديد معايير خروج قابلة للقياس لإعادة فتح Gate 1A
+- [x] إعداد Gate 1A Decision Package دون تنفيذ الإصلاح أو بدء Gate لاحق
+- [ ] حفظ الحزمة على feature branch وتسليمها والتوقف
