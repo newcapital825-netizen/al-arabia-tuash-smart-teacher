@@ -275,4 +275,23 @@
 - [x] إعادة بناء أدلة من بداية/وسط/نهاية صفحات مختلفة دون كشف الاقتباس
 - [x] تشغيل extraction مرتين ومقارنة stability وdocument/evidence IDs
 - [x] تحديث Manifest وGATE_1A_REPORT بتصنيف العينة والنتائج
-- [ ] حفظ الاختبار على feature branch فقط وعدم Push إلى main أو بدء Gate لاحق
+- [x] حفظ الاختبار على feature branch فقط وعدم Push إلى main أو بدء Gate لاحق
+
+## Gate 1A — Independent Samples Pending
+
+- [ ] تثبيت PDF-SCAN-001 كحالة Regression دون إصلاح OCR
+- [ ] اختبار DOCX-001 العربي الحقيقي عند إرفاقه: extraction/structure/location/evidence/reconstruction/stability
+- [ ] اختبار PDF-TEXT-001 العربي الحقيقي المستقل عند إرفاقه: extraction/pages/structure/location/evidence/reconstruction/stability
+- [ ] اختبار IMAGE-001 العربية الحقيقية عند إرفاقها: OCR/structure/location/evidence/reconstruction/stability
+- [ ] إعداد Cross-Format Findings وGate 1A Document Gauntlet Status Report بعد اكتمال العينات
+- [ ] التوقف بعد التقرير دون PDF OCR redesign أو Gate 1B أو R2 أو Gate 2 أو RAG أو Payment أو Pilot أو UI redesign
+
+## Gate 1A — Attached Image and Ministry PDF
+
+- [x] تسجيل metadata وhash للصورة العربية الجديدة والـPDF الجديد دون حفظ المحتوى
+- [x] تشغيل OCR للصورة العربية مرتين وقياس Arabic/RTL/punctuation metrics دون تسجيل النص
+- [x] تشغيل PDF extraction للكتاب المرفق وقياس الصفحات والنص العربي والهيكل
+- [x] اختبار Canonical وLocation وEvidence Reconstruction للصورة والـPDF
+- [x] اختبار Repeatability للصيغتين وتصنيف PASS/PARTIAL/FAIL/BLOCKED
+- [x] تحديث Manifest وGATE 1A REPORT بالنتائج دون رفع الملفات أو النصوص إلى GitHub
+- [ ] حفظ الاختبار على feature branch والتوقف دون Gate لاحق أو OCR redesign

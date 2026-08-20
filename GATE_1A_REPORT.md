@@ -4,11 +4,11 @@
 
 ### **GATE 1A PARTIAL — SPECIFIC GAPS REMAIN**
 
-تم اختبار عينة PDF عربية حقيقية مرفقة من المستخدم دون نسخها إلى GitHub أو حفظ نصها. العينة حجمها 9,498,045 بايت، وmetadata يذكر 15 صفحة ولا توجد خطوط مضمّنة. أظهر PDF text extraction ناتجًا قصيرًا من 261 وحدة نصية، لكن عدد المحارف العربية كان صفرًا، وبنى الكود Canonical من صفحة واحدة و15 Evidence فقط؛ لذلك لا يمكن اعتبار الناتج تمثيلًا صالحًا لمحتوى الامتحان. أُنشئ Manifest metadata-only، واختُبرت الثبات وإعادة البناء الداخلية، وسُجلت الفجوة بدل تمرير النص وكأنه صحيح. ما زالت عينات DOCX والصورة وPDF عربي نصي مستقل مطلوبة.
+اختُبرت الآن صورة عربية حقيقية وPDF عربي جديد من المستخدم دون نسخ المحتوى إلى GitHub أو السجلات. الصورة نجحت في إنتاج OCR عربي قابل للقياس، لكن تشغيل OCR مرتين لم يكن متطابقًا؛ لذلك صُنفت OCR **PARTIAL / NON-DETERMINISTIC**. الـPDF الجديد metadata يذكر 18 صفحة ولا توجد خطوط مضمّنة، بينما extraction أعاد 315 وحدة بلا محارف عربية وبنى صفحة واحدة فقط؛ لذلك صُنّف **FAIL للاستخراج وOCR وLocation**. بقي PDF-SCAN-001 السابق Regression بنفس فشله. أُنشئ Manifest metadata-only وسُجلت النتائج دون ادعاء PASS غير مدعوم. لا تزال عينة DOCX وPDF عربي نصي مستقل مطلوبة.
 
 ## A — Samples Available
 
-العينة المتاحة فعليًا هي PDF المرفق: 15 صفحة، 9,498,045 بايت، SHA-256 موثق في Manifest فقط، ولا توجد خطوط مضمّنة حسب metadata. وُجد أيضًا ملف `/home/ubuntu/audit_source_ar.txt`، لكنه يحمل بنية وعبارات اختبارية صريحة مثل «ملاحظة الاختبار» و«جدول الاختبار»، لذلك صُنّف **EXCLUDED — SYNTHETIC TEST SHEET** ولم يُستخدم لإثبات Gate 1A.
+العينات الحقيقية المتاحة الآن هي صورة WebP عربية وPDF عربي جديد، إضافة إلى PDF-SCAN-001 السابق. الصورة حجمها 140,186 بايت، ونتج OCR بطول 58 وحدة مع 49 محرفًا عربيًا و2 علامات ترقيم، لكن النص بين التشغيلين اختلف. الـPDF الجديد حجمه 2,273,692 بايت، وmetadata يذكر 18 صفحة ولا توجد خطوط مضمّنة؛ extraction أعاد 315 وحدة بلا محارف عربية و63 رقمًا، وبنى Canonical من صفحة واحدة. وُجد أيضًا ملف `/home/ubuntu/audit_source_ar.txt`، لكنه يحمل بنية اختبارية صريحة، لذلك صُنّف **EXCLUDED — SYNTHETIC TEST SHEET**.
 
 تم إنشاء `GATE_1A_CORPUS_MANIFEST.md` ويحتوي على metadata فقط، دون نسخ نصوص أو صور إلى GitHub.
 
@@ -17,41 +17,42 @@
 | Type | Status | Reason |
 |---|---|---|
 | PDF عربي نصي | **BLOCKED — REAL SAMPLE REQUIRED** | لم تتوفر عينة مستقلة ذات طبقة نص عربية موثوقة |
-| PDF عربي مصوّر/Scanned | **FAIL** | العينة موجودة لكن extraction أعاد 261 وحدة بلا محارف عربية، وOCR لم يُشغّل |
+| PDF عربي مصوّر/Scanned السابق | **FAIL** | PDF-SCAN-001: extraction غير عربي وفقد الصفحات، وOCR غير منفذ |
+| PDF عربي مصوّر/Scanned الجديد | **FAIL** | 18 صفحة metadata، extraction بلا محارف عربية، Canonical صفحة واحدة، وOCR غير منفذ |
 | DOCX عربي | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
-| Image عربي | **BLOCKED — REAL SAMPLE REQUIRED** | لا توجد عينة حقيقية متاحة |
+| Image عربي | **PARTIAL / NON-DETERMINISTIC** | OCR أنتج 49 محرفًا عربيًا، لكن التشغيلين اختلفا في النص والبنية وEvidence IDs |
 
 ## C — Ingestion
 
-**PARTIAL.** نجحت قراءة ملف PDF المرفق وحساب metadata، لكن تمثيل parser الناتج احتوى صفحة واحدة فقط مقابل 15 صفحة فعلية؛ DOCX والصورة وPDF النصي المستقل ما زالت BLOCKED.
+**PARTIAL.** نجحت قراءة الصورة وPDF الجديد وحساب metadata. مسار OCR للصورة اشتغل فعليًا، بينما PDF الجديد قُرئ كملف لكن Canonical الناتج صفحة واحدة مقابل 18 صفحة metadata؛ DOCX وPDF عربي نصي مستقل ما زالا BLOCKED.
 
 ## D — Extraction
 
-**FAIL على العينة المرفقة.** أُجري extraction فعلي مرتين، وأعاد 261 وحدة نصية بلا محارف عربية، مع Canonical من صفحة واحدة فقط. metadata الفعلي يذكر 15 صفحة ولا توجد خطوط مضمّنة. أُجري فحص سلبي على PDF تالف وفشل باستثناء parser واضح بدل إنتاج Evidence وهمي.
+**FAIL على PDF-SCAN-001 وPDF الجديد.** الـPDF الجديد أعاد 315 وحدة بلا محارف عربية، مع Canonical من صفحة واحدة مقابل 18 صفحة metadata. أُجري extraction مرتين وكان ثابتًا، لكنه ثابت على نتيجة غير صالحة عربيًا. فشل PDF التالف باستثناء parser واضح بدل إنتاج Evidence وهمي.
 
 ## E — OCR
 
-**FAIL على PDF المرفق.** العينة تبدو PDF مصوّرًا/بدون خطوط مضمّنة، لكن مسار upload الحالي لم يشغّل OCR لـPDF؛ لذلك لم ينتج نصًا عربيًا موثوقًا. صورة عربية مستقلة ما زالت BLOCKED.
+**PARTIAL للصورة، FAIL للـPDF.** OCR الصورة أنتج مؤشرات عربية: 49 محرفًا عربيًا و2 علامات ترقيم، لكن التشغيلين غير متطابقين؛ textStable وstructureStable وevidenceStable كلها `false`. PDF-SCAN-001 وPDF الجديد لم يشغّلا OCR، ولذلك لم ينتجا نصًا عربيًا موثوقًا.
 
 ## F — Canonical Representation
 
-**PARTIAL.** النموذج Canonical اشتغل فعليًا على ناتج PDF، وأنتج Document/Page/Block/Evidence، لكن page count الناتج كان 1 بدل 15 والنص لم يحوِ محارف عربية؛ لذلك التمثيل قابل للتتبع داخليًا لكنه غير صالح كتمثيل للمصدر الحقيقي حتى يمر PDF المصوّر عبر OCR.
+**PARTIAL.** Canonical اشتغل على OCR الصورة وعلى extraction الـPDF. الصورة أنتجت صفحة واحدة و4 Evidence، وكل عينات Evidence أعادت بناء نفسها داخليًا، لكن اختلاف OCR جعل البنية غير مستقرة. PDF الجديد أنتج صفحة واحدة و18 Evidence رغم أن metadata يذكر 18 صفحة؛ لذا لا يمثل المصدر متعدد الصفحات حتى يُنفذ OCR/page segmentation.
 
 ## G — Location Model
 
-**FAIL على العينة المرفقة.** Evidence locations الداخلية تحمل `page: 1` فقط، بينما PDF metadata يذكر 15 صفحة. هذا تعارض مباشر يمنع اعتبار Location Mapping صالحًا للمصدر. أنواع المواقع الأخرى ما زالت غير مختبرة على DOCX وصورة حقيقية.
+**FAIL على PDF-SCAN-001 وPDF الجديد؛ PARTIAL للصورة.** كلا الـPDFين أنتجا locations من `page: 1` فقط رغم metadata متعدد الصفحات. الصورة لديها `text-range` بلا page/box coordinates؛ location داخلي قابل لإعادة البناء لكنه ليس موضعًا بصريًا دقيقًا داخل الصورة.
 
 ## H — Evidence IDs
 
-**PARTIAL.** Evidence IDs كانت deterministic وثابتة في التشغيلين، وأعيد بناء عينات البداية والمنتصف والنهاية داخليًا بنجاح. لكنها مبنية على extraction ناقص من صفحة واحدة، لذلك لا تثبت أدلة المصدر الحقيقي متعدد الصفحات.
+**PARTIAL.** Evidence IDs الصورة أعيد بناؤها داخليًا، لكن IDs اختلفت بين تشغيلَي OCR بسبب اختلاف النص. Evidence IDs للـPDF الجديد ثابتة بين تشغيلين لكنها مبنية على extraction غير عربي وصفحة واحدة فقط؛ لذلك لا تثبت أدلة المصدر الكامل.
 
 ## I — Evidence Reconstruction
 
-**PARTIAL.** أُعيد بناء ثلاثة Evidence IDs من البداية والمنتصف والنهاية للـCanonical الناتج، وكلها أعادت نفس ID داخليًا. لكن لا يمكن ربطها بصفحات المصدر 2–15 لأن parser لم يبنِ تلك الصفحات؛ لذلك لم يثبت reconstruction الكامل للمصدر.
+**PARTIAL.** أُعيد بناء عينات البداية والمنتصف والنهاية للصورة والـPDF الجديد داخليًا. الصورة أعادت reconstruction داخل كل تشغيل، لكن اختلاف OCR بين التشغيلين يمنع ثبات الدليل عبر الزمن. PDF أعاد reconstruction داخليًا، لكن لا يمكن ربطه بصفحات المصدر 2–18.
 
 ## J — Deterministic Stability
 
-**PASS داخليًا / PARTIAL على Gate 1A.** تشغيل PDF مرتين أعاد نفس document hash والبنية وEvidence IDs. لكن الاستقرار يثبت تكرار النتيجة الناقصة نفسها، ولا يعالج فشل OCR أو تعارض page count.
+**FAIL للصورة من ناحية repeatability؛ PARTIAL للـPDF.** OCR الصورة غير deterministic: textStable وstructureStable وEvidence stability = `false`. PDF الجديد كان stable في النص والبنية وEvidence IDs، لكنه stable على ناتج ناقص وغير عربي ولا يطابق page count.
 
 ## K — Error Handling
 
@@ -97,20 +98,20 @@
 
 ## Q — Remaining Gaps
 
-الفجوات المحددة هي: إضافة مسار OCR فعلي لـPDF المصوّر قبل Canonical؛ إصلاح page segmentation بحيث يطابق 15 صفحة فعلية؛ توفير PDF عربي نصي مستقل وDOCX عربي وصورة عربية؛ إعادة تشغيل reconstruction على صفحات متعددة بعد OCR؛ والتحقق من OCR العربي على الهمزات والتشكيل والأرقام والاتجاه RTL. لا يُعتبر PDF الحالي PASS؛ تصنيفه FAIL للاستخراج وOCR وLocation، مع ثبات داخلي فقط.
+الفجوات المحددة هي: إضافة PDF type detection مع OCR fallback؛ إصلاح page segmentation ليطابق 15 و18 صفحة فعلية؛ معالجة عدم حتمية OCR للصورة؛ توفير DOCX عربي وPDF عربي نصي مستقل؛ وإضافة location بصري للصورة إن كان مطلوبًا. لا يُعتبر أي PDF حالي PASS، ولا تُعتبر الصورة PASS بسبب عدم الثبات.
 
 ## Gate 1A Scorecard
 
 | Capability | PDF Text | PDF Scanned | DOCX | Image |
 |---|---|---|---|---|
-| Ingestion | BLOCKED | PASS | BLOCKED | BLOCKED |
-| Extraction | BLOCKED | FAIL | BLOCKED | BLOCKED |
-| OCR | BLOCKED | FAIL | BLOCKED | BLOCKED |
-| Canonical Structure | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
-| Location Mapping | PARTIAL | FAIL | BLOCKED | BLOCKED |
-| Evidence IDs | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
-| Reconstruction | BLOCKED | PARTIAL | BLOCKED | BLOCKED |
-| Stability | PARTIAL | PARTIAL | BLOCKED | BLOCKED |
+| Ingestion | BLOCKED | FAIL/PARTIAL | BLOCKED | PASS |
+| Extraction | BLOCKED | FAIL | BLOCKED | PARTIAL via OCR |
+| OCR | BLOCKED | FAIL | BLOCKED | PARTIAL |
+| Canonical Structure | PARTIAL | PARTIAL | BLOCKED | PARTIAL |
+| Location Mapping | PARTIAL | FAIL | BLOCKED | PARTIAL |
+| Evidence IDs | PARTIAL | PARTIAL | BLOCKED | PARTIAL |
+| Reconstruction | BLOCKED | PARTIAL | BLOCKED | PARTIAL |
+| Stability | PARTIAL | PARTIAL | BLOCKED | FAIL |
 | Error Handling | PARTIAL | PARTIAL | PARTIAL | PARTIAL |
 
 `PARTIAL` هنا تعني أن البنية أو اختبارًا سلبيًا تحقق، لا أن النوع اجتاز اختبار عينة حقيقية.
@@ -123,7 +124,7 @@
 | `server/routers.ts` | رفض OCR الفارغ قبل التلخيص | منع تمرير نتيجة OCR غير موثوقة |
 | `server/extract.gate1a.test.ts` | ثلاث اختبارات فشل آمن | تحويل فشل حقيقي إلى Regression tests دون محتوى مستخدم |
 | `GATE_1A_CORPUS_MANIFEST.md` | metadata-only corpus record | توثيق العينات المتاحة والمحجوبة دون محتوى |
-| `GATE_1A_REPORT.md` | هذا التقرير | توثيق Gate 1A والقرار والفجوات ونتيجة PDF الحقيقي |
+| `GATE_1A_REPORT.md` | هذا التقرير | توثيق Gate 1A والقرار والفجوات ونتائج الصورة وPDF الوزارة |
 
 ## Hard Stop
 
