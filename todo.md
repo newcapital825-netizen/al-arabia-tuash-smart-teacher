@@ -279,12 +279,12 @@
 
 ## Gate 1A — Independent Samples Pending
 
-- [ ] تثبيت PDF-SCAN-001 كحالة Regression دون إصلاح OCR
-- [ ] اختبار DOCX-001 العربي الحقيقي عند إرفاقه: extraction/structure/location/evidence/reconstruction/stability
-- [ ] اختبار PDF-TEXT-001 العربي الحقيقي المستقل عند إرفاقه: extraction/pages/structure/location/evidence/reconstruction/stability
-- [ ] اختبار IMAGE-001 العربية الحقيقية عند إرفاقها: OCR/structure/location/evidence/reconstruction/stability
-- [ ] إعداد Cross-Format Findings وGate 1A Document Gauntlet Status Report بعد اكتمال العينات
-- [ ] التوقف بعد التقرير دون PDF OCR redesign أو Gate 1B أو R2 أو Gate 2 أو RAG أو Payment أو Pilot أو UI redesign
+- [x] تثبيت PDF-SCAN-001 كحالة Regression دون إصلاح OCR
+- [x] اختبار DOCX-001 العربي الحقيقي عند إرفاقه: extraction/structure/location/evidence/reconstruction/stability
+- [x] اختبار PDF-TEXT-001 العربي الحقيقي المستقل عند إرفاقه: extraction/pages/structure/location/evidence/reconstruction/stability
+- [x] اختبار IMAGE-001 العربية الحقيقية عند إرفاقها: OCR/structure/location/evidence/reconstruction/stability
+- [x] إعداد Cross-Format Findings وGate 1A Document Gauntlet Status Report بعد اكتمال العينات
+- [x] التوقف بعد التقرير دون PDF OCR redesign أو Gate 1B أو R2 أو Gate 2 أو RAG أو Payment أو Pilot أو UI redesign
 
 ## Gate 1A — Attached Image and Ministry PDF
 
