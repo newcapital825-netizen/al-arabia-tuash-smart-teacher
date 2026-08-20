@@ -243,7 +243,7 @@
 - [x] تشغيل TypeScript check وTests وBuild قبل Baseline
 - [x] إنشاء الفروع main وdevelopment وfeature/* وفق الحاجة فقط
 - [x] إنشاء Commit برسالة `chore: establish gate-1-partial baseline` ثم Push إلى GitHub إن نجحت الفحوص
-- [ ] إعداد GITHUB BASELINE REPORT والتوقف دون Gate 1 completion أو Production
+- [x] إعداد GITHUB BASELINE REPORT والتوقف دون Gate 1 completion أو Production
 
 ## GitHub Phase 2 — User Authorized Execution
 
@@ -251,4 +251,18 @@
 - [x] إعادة تنفيذ Security Pre-Push وValidation قبل أي Push
 - [x] إنشاء Private Repository باسم `al-arabia-tuash-smart-teacher` عبر التكامل الرسمي فقط
 - [x] إنشاء baseline والفروع المطلوبة دون ربط Production
-- [ ] إعداد GITHUB BASELINE REPORT وتسليمه والتوقف
+- [x] إعداد GITHUB BASELINE REPORT وتسليمه والتوقف
+
+## Gate 1A — Real Document Gauntlet
+
+- [x] إنشاء/استخدام فرع `feature/gate-1a-real-document-validation` دون تعديل main
+- [x] جرد العينات الحقيقية المتاحة محليًا حسب النوع دون قراءة محتوى حساس في السجل
+- [ ] تشغيل ingestion/extraction/OCR/canonical على العينات الحقيقية المتاحة فقط
+- [x] إنشاء Corpus Manifest ببيانات metadata غير حساسة وhashes اختيارية فقط
+- [ ] اختبار Original Text مقابل Normalized Text وسلامة التطبيع العربي
+- [ ] اختبار Evidence ID Reconstruction من البداية والمنتصف والنهاية عند توفر الموضع
+- [ ] اختبار Location Integrity وDuplicate/Stability على تشغيلين مستقلين
+- [x] اختبار Empty/Corrupted/Unsupported/Low-quality/No-text inputs مع فشل آمن
+- [x] تشغيل TypeScript وTests وBuild بعد أي تعديل ضروري فقط
+- [x] إعداد `GATE 1A REPORT — REAL DOCUMENT GAUNTLET` وتصنيف كل مسار
+- [ ] حفظ التقرير في فرع الاختبار وعدم Push إلى main أو بدء Gate لاحق

@@ -1,0 +1,20 @@
+# Gate 1A Corpus Manifest
+
+هذا السجل يحتوي على metadata فقط. لم تُنسخ أي عينة حقيقية إلى المشروع أو GitHub، ولم يُحفظ محتوى مستند في هذا الملف.
+
+| Sample ID | Type | Source format | Page count | Extraction mode | OCR required | Status |
+|---|---|---|---:|---|---|---|
+| PDF-TEXT-001 | PDF عربي نصي | غير متاح محليًا | — | — | لا | BLOCKED — REAL SAMPLE REQUIRED |
+| PDF-SCANNED-001 | PDF عربي مصوّر | غير متاح محليًا | — | — | نعم | BLOCKED — REAL SAMPLE REQUIRED |
+| DOCX-AR-001 | DOCX عربي | غير متاح محليًا | — | — | لا | BLOCKED — REAL SAMPLE REQUIRED |
+| IMAGE-AR-001 | صورة عربية | غير متاحة محليًا | — | — | نعم | BLOCKED — REAL SAMPLE REQUIRED |
+| TXT-AR-EXCLUDED-001 | TXT عربي تجريبي | /home/ubuntu/audit_source_ar.txt | — | text extraction | لا | EXCLUDED — SYNTHETIC TEST SHEET, NOT COUNTED AS REAL SAMPLE |
+
+## Privacy Notes
+
+لم يُحفظ نص أي عينة في GitHub أو في سجل الاختبار. العينة النصية المستبعدة لم تُستخدم لإثبات PASS؛ استُبعدت لأنها تحمل مؤشرات واضحة على كونها ورقة اختبار مصطنعة، ولذلك لا يجوز اعتبارها عينة عربية حقيقية وفق قاعدة Gate 1A.
+
+Optional metadata hash for the excluded local test sheet only:
+
+4147cd5924625b8103f92250babcc91e879d62ab6608b3378d48b48a9f37a3dd
+

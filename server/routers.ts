@@ -88,7 +88,8 @@ export const appRouter = router({
       if (!(await consumeUsage(active.id))) { await updateDocument(id, { storageKey: "orphaned", analysisKey: null, documentStatus: "failed" }); throw new TRPCError({ code: "FORBIDDEN", message: "نفد رصيد المحاولات. تواصل مع المالك أو اختر خطة مناسبة." }); }
       await recordUsage({ userId: ctx.user.id, documentId: id, eventType: "upload" });
       const extracted = input.mimeType.startsWith("image/") ? await (async () => { const text = await groundedVision("أنت OCR عربي. استخرج النص من الصورة فقط، بلا إضافة.", `data:${input.mimeType};base64,${bytes.toString("base64")}`); const canonical = buildCanonicalDocument(text, input.mimeType); return { text: canonical.originalText, normalizedText: canonical.normalizedText, citations: makeCitations(text, input.mimeType), canonical }; })() : await extractSource(bytes, input.mimeType);
-      const raw = extracted.text || `الملف المرفوع اسمه ${input.filename}. لم يُستخرج منه نص قابل للقراءة.`;
+      if (!extracted.text.trim()) throw new Error("NO_EXTRACTABLE_TEXT");
+      const raw = extracted.text;
       const citationGuide = extracted.citations.slice(0, 80).map((item) => `[${item.label}] ${item.quote}`).join("\n");
       let summary: string;
       try {

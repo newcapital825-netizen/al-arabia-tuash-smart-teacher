@@ -30,7 +30,10 @@ export async function extractSource(bytes: Buffer, mimeType: string): Promise<Ex
     const result = await parser.getText();
     text = String(result?.text ?? "");
     await parser.destroy?.();
+  } else {
+    throw new Error("UNSUPPORTED_MIME_TYPE");
   }
+  if (!text.trim()) throw new Error("NO_EXTRACTABLE_TEXT");
   const canonical = buildCanonicalDocument(text, mimeType);
   return {
     text: canonical.originalText,
