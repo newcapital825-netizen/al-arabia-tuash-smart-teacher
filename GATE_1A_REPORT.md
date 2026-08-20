@@ -90,11 +90,11 @@
 
 ## P — Commits
 
-لا يوجد Commit أو Push لهذه التعديلات الجديدة في Gate 1A حتى لحظة إعداد هذا التقرير. التعديلات موجودة على الفرع:
+تم حفظ نتائج هذه الجولة على فرع Gate 1A فقط. آخر Commit وPush للفرع هو `65e922f` برسالة `test: record DOCX and text PDF gauntlet results`. التعديلات موجودة على الفرع:
 
 `feature/gate-1a-real-document-validation`
 
-آخر Baseline منشور سابقًا على `main` هو `2fe5544`، ولم يُعدل `main`.
+آخر Baseline منشور سابقًا على `main` هو `2fe5544`، ولم يُعدل `main`. لم تُرفع أي ملفات عينة أو نصوص مستخرجة إلى GitHub.
 
 ## Q — Remaining Gaps
 
@@ -115,6 +115,19 @@
 | Error Handling | PARTIAL | PARTIAL | PARTIAL | PARTIAL |
 
 `PARTIAL` هنا تعني أن البنية أو اختبارًا سلبيًا تحقق، لا أن النوع اجتاز اختبار عينة حقيقية.
+
+## Cross-Format Findings
+
+| السؤال | النتيجة المدعومة |
+|---|---|
+| What works reliably? | استخراج DOCX العربي، التطبيع المحافظ، Canonical paragraphs، Evidence IDs وإعادة البناء الداخلية؛ كلها مستقرة في DOCX-001 عبر تشغيلين. |
+| What fails? | PDF extraction العربي والـpage mapping في العينات الثلاث المصوّرة/غير ذات الطبقة النصية؛ كذلك OCR للصورة غير حتمي. |
+| What is partially working? | OCR الصورة ينتج نصًا عربيًا قابلًا للقياس لكنه يتغير بين التشغيلات، وCanonical يعمل داخليًا دون موقع بصري للصورة. |
+| What is blocked? | إثبات PDF عربي نصي قابل للبحث، DOCX إضافي، وربط Evidence بمواضع صفحات PDF أو إحداثيات الصورة. |
+| What architectural weakness is proven? | لا يكتشف المسار الحالي نوع PDF ولا يختار OCR fallback، كما أن page segmentation لا يطابق metadata للملفات المصوّرة. |
+| What can be fixed locally? | إبقاء الفشل الآمن، تسجيل metrics، وإضافة اختبارات regression وتحسين رسائل الحالة؛ لا يكفي ذلك لإثبات PDF/OCR. |
+| What requires architectural change? | PDF type detection → OCR fallback، page-level OCR mapping، وطبقة location بصرية للصورة، إضافة إلى معالجة حتمية OCR أو قبول عدم الحتمية كحاجز جودة. |
+
 
 ## Changes Made
 

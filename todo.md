@@ -304,4 +304,4 @@
 - [x] اختبار Canonical وLocation وEvidence Reconstruction للصيغتين
 - [x] اختبار stability وDuplicate/Evidence IDs عبر تشغيلين مستقلين
 - [x] تحديث Manifest وGate 1A Cross-Format Report دون رفع الملفات أو النصوص إلى GitHub
-- [ ] حفظ النتائج على feature branch والتوقف دون Gate لاحق أو إصلاح معماري
+- [x] حفظ النتائج على feature branch والتوقف دون Gate لاحق أو إصلاح معماري
