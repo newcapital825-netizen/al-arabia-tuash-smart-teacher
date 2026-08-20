@@ -231,4 +231,24 @@
 - [x] فحص بنية المشروع بحثًا عن أسرار دون طباعة القيم أو تعديل الملفات
 - [x] مراجعة `.gitignore` و`.env.example` الحالية دون إنشاء Push
 - [x] إعداد GITHUB INTEGRATION REPORT بالأقسام A–G
-- [ ] التوقف قبل إنشاء Repository أو تسجيل الدخول أو Push أو ربط Production
+- [x] التوقف قبل إنشاء Repository أو تسجيل الدخول أو Push أو ربط Production
+
+## GitHub Phase 2 — Secure Private Baseline
+
+- [ ] حسم اسم Private Repository قبل الإنشاء
+- [ ] تنفيذ تفعيل GitHub الرسمي عبر OAuth/واجهة Manus دون استقبال credentials في المحادثة
+- [ ] إنشاء Repository خاص فقط بعد موافقة المستخدم
+- [ ] إجراء Security Pre-Push النهائي ورفض Push عند وجود Secret حقيقي أو غير مؤكد
+- [ ] إنشاء/تحديث `.env.example` بالأسماء فقط إذا لزم، دون أسرار
+- [ ] تشغيل TypeScript check وTests وBuild قبل Baseline
+- [ ] إنشاء الفروع main وdevelopment وfeature/* وفق الحاجة فقط
+- [ ] إنشاء Commit برسالة `chore: establish gate-1-partial baseline` ثم Push إلى GitHub إن نجحت الفحوص
+- [ ] إعداد GITHUB BASELINE REPORT والتوقف دون Gate 1 completion أو Production
+
+## GitHub Phase 2 — User Authorized Execution
+
+- [ ] التحقق من أن التفويض الرسمي قابل للاستخدام من أدوات Manus
+- [ ] إعادة تنفيذ Security Pre-Push وValidation قبل أي Push
+- [ ] إنشاء Private Repository باسم `al-arabia-tuash-smart-teacher` عبر التكامل الرسمي فقط
+- [ ] إنشاء baseline والفروع المطلوبة دون ربط Production
+- [ ] إعداد GITHUB BASELINE REPORT وتسليمه والتوقف
